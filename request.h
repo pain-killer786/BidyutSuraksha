@@ -34,6 +34,6 @@ char * get_request_string(Request * request);
 Request * get_request_info(char * request_info_string);
 Request ** read_all_requests_from_file(FILE * fp);
 void replace_request_in_file(FILE * fp, Request * request);
-Request ** get_requests_of_user(unsigned long user_id, int * request_count);
+Request ** get_request_of_user(unsigned long user_id, int * request_count);
 void release_requests(void);
 #endif /* request_h */
