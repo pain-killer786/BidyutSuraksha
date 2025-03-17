@@ -103,11 +103,10 @@ void render_menu()
         edit_request_page();
         break;
    case '5':
-        view_requests_page();
+        view_request_page();
         break;
     case '6':
         close_application(EXIT_SUCCESS, "");
-        break;
     default:
         close_application(EXIT_SUCCESS, "");
         break;
@@ -122,8 +121,8 @@ void add_user_page()
     /* User name */
     char user_name[STR_MAX_LENGTH];
 
-    /* User phone */    
-    char user_phone[STR_MAX_LENGTH + 2];
+    /* User contact no. */    
+    char user_contact[ID_LENGTH+2];
 
     /* User Id String, which will be shown in success dialogue box. */
     char user_id_string[STR_MAX_LENGTH];
@@ -160,7 +159,7 @@ void add_user_page()
     gotoxy((int)strlen(user_contact_label), 4);
     scanf("%s", user_contact);
     flush_buffer();
-
+    
     /* Prepare user id string */
     user.user_id = user_id;
     user.user_name = user_name; 
@@ -192,7 +191,7 @@ void add_user_page()
 
     /* Prepare success dialogue */
     sprintf(user_id_string, "User ID : %lu", user_id);
-    dialogue("User added successfully", user_id_string);
+    show_dialogue_box("User added successfully", user_id_string);
     render_menu();
 }
 
@@ -265,11 +264,11 @@ void view_user_page()
     {
         line_offset += 2;
         gotoxy(41, line_offset++);
-        printf("Request ID : %lu", user_requests[i]->request_id);
+        printf("Request Id : %lu", user_requests[i]->request_id);
         gotoxy(41, line_offset++);
         printf("Request Status : %s", get_request_status_string(user_requests[i]->status));
         gotoxy(41, line_offset++);
-        printf("Comments : %s", user_requests[i]->comments);
+        printf("Comments : %s", user_requests[i]->comment);
         gotoxy(41, line_offset++);
         printf("Address : %s", user_requests[i]->address);
     }
@@ -295,7 +294,7 @@ void view_request_page()
 
     system("clear");
 
-    printf("Enter Request ID : ");
+    printf("Enter Request Id : ");
     scanf("%lu", &request_id);
     flush_buffer();
 
@@ -320,7 +319,7 @@ void view_request_page()
     printf("Requested By : %s (id : %lu)", request->requested_by->user_name, request->requested_by->user_id);
     printf("\nRequest Status : %s", get_request_status_string(request->status));
     printf("\nAddress : %s", request->address);
-    printf("\nComments : %s", request->comments);
+    printf("\nComments : %s", request->comment);
 
     gotoxy(0, 24);
     printf("Press any key to return to main menu...");
@@ -360,7 +359,7 @@ void add_request_page()
     const char * enter_detail_label = "Enter details of Request made by user ";
     const char * user_id_label = "Enter User ID : ";
     const char * request_address_label = "Enter Address : ";
-    const char * request_comments_label = "Enter any Comments (optional) : ";
+    const char * request_comment_label = "Enter any Comments (optional) : ";
 
     /* Clear screen */
     system("clear");
@@ -372,7 +371,7 @@ void add_request_page()
     printf("%s", user_id_label);
 
     gotoxy(0, 4);
-    printf("%s", request_comments_label);
+    printf("%s", request_comment_label);
 
     gotoxy(0, 5);
     printf("%s", request_address_label);
@@ -383,7 +382,7 @@ void add_request_page()
     flush_buffer();
 
     /* Prepare input field for user comment on row = 4, column = length(request_comment_label). */
-    gotoxy((int)strlen(request_comments_label), 4);
+    gotoxy((int)strlen(request_comment_label), 4);
     /*Using fgets because string can be empty*/
     fgets(comment, STR_MAX_LENGTH, stdin);
 
@@ -418,9 +417,9 @@ void add_request_page()
     /* Prepare request id string */
     request.request_id = request_id;
     request.requested_by = user;
-    request.address = address;
-    request.comment = comment;
     request.status = PENDING;
+    request.comment = comment;
+    request.address = address;
 
     /* Delimited string representation of 'request', which will be directly stored in file. */
     /* 'request_info_string' is pointing to heap memory, so release it after work is done. */
@@ -495,18 +494,18 @@ void edit_request_page()
     printf("\nRequested By : %s (id : %lu)", request->requested_by->user_name, request->requested_by->user_id);
     printf("\nRequest Status : %s", get_request_status_string(request->status));
     printf("\nAddress : %s", request->address);
-    printf("\nComments : %s", request->comments);
+    printf("\nComments : %s", request->comment);
 
     printf("\n\n***************************************************************************");
 
     printf("\n Enter new Details\n\n");
 
     printf("%s", enter_new_status_label);
-    printf("%s", enter_new_status_suggestion_label);
+    printf("\n%s", enter_new_status_suggestion_label);
 
     gotoxy((int)strlen(enter_new_status_label), 14);
 
-    scanf("%d" &new_status);
+    scanf("%d", &new_status);
     flush_buffer();
 
     printf("\n%s", enter_new_comment_label);
@@ -616,7 +615,7 @@ void show_dialogue_box(const char * message, char * id)
     }
 
     /*Line 5 */
-    gotoxy(left_offset, line_offset++);
+    gotoxy(left_offset, line_offset);
     printf("*");
     gotoxy((int)((80 - info_length) / 2), line_offset);
     printf("%s", press_any_key);
