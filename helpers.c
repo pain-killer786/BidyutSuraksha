@@ -14,7 +14,7 @@ char * tokenize_string(char * source, char const * delimiter, char ** context)
         return NULL;
     }
     char * rest_string = strpbrk(source, delimiter);
-    char * copy_rest_string[STR_MAX_LENGTH];
+    char copy_rest_string[STR_MAX_LENGTH];
     char * token = NULL;
     if (rest_string != NULL)
     {
