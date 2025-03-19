@@ -68,7 +68,9 @@ User * get_user_info (char * user_info)
                 break;
         }
     }
+
     free(user_info_copy);
+
     if (COLUMN_TAG != 3)
     {
         free(read_user);
@@ -111,7 +113,7 @@ void replace_user_in_file(FILE * fp, User * updated_user)
     rewind(fp);
     while((fgets(line, STR_MAX_LENGTH, fp)) != NULL)
     {
-        if ((read_user == get_user_info(line)) == NULL)
+        if ((read_user = get_user_info(line)) == NULL)
         {
             continue;
         }
@@ -134,7 +136,7 @@ void replace_user_in_file(FILE * fp, User * updated_user)
     free(updated_user_string);
 }
 
-void release_user()
+void release_users()
 {
     if(!users)
     {
